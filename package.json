@@ -2,10 +2,12 @@
   "name": "nodejs-hw-mongodb",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint src/**/*.js",
+    "start": "node ./src/index.js"
   },
   "repository": {
     "type": "git",
@@ -14,7 +16,6 @@
   "keywords": [],
   "author": "Hanna Uler <hannauler@gmail.com>",
   "license": "ISC",
-  "type": "commonjs",
   "bugs": {
     "url": "https://github.com/hanna-uler/nodejs-hw-mongodb/issues"
   },
@@ -28,6 +29,7 @@
   },
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^17.0.1",
     "express": "^5.1.0",
     "pino-http": "^10.5.0"
   }
