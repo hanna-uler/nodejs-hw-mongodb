@@ -1,7 +1,7 @@
 import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
-import { getEnvVar } from './utils/getEnvVar';
+import { getEnvVar } from './utils/getEnvVar.js';
 
 const PORT = Number(getEnvVar("PORT", 3000));
 
@@ -27,7 +27,10 @@ export default function setupServer() {
             message: 'Not found',
         })
       });
-    app.listen(PORT, () => {
+    app.listen(PORT, (error) => {
+        if (error) {
+            throw error;
+        }
         console.log(`Server is running on port ${PORT}`)
     });
 };
