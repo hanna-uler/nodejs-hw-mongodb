@@ -1,10 +1,10 @@
 import Joi from "joi";
 
 export const createContactSchema = Joi.object({
-    name: Joi.string().min(3).max(30).required().messages({
+    name: Joi.string().min(3).max(20).required().messages({
         'string.base': 'Name should be a string',
         'string.min': 'Name should have at least 3 characters',
-        'string.max': 'Name should have at most 30 characters',
+        'string.max': 'Name should have at most 20 characters',
         'any.required': 'Name is required',
       }),
     phoneNumber: Joi.string().pattern(/^\+?[1-9]\d{1,14}$/).required().messages({
@@ -23,10 +23,10 @@ export const createContactSchema = Joi.object({
 });
 
 export const updateContactSchema = Joi.object({
-    name: Joi.string().min(3).max(30).messages({
+    name: Joi.string().min(3).max(20).messages({
         'string.base': 'Name should be a string',
         'string.min': 'Name should have at least 3 characters',
-        'string.max': 'Name should have at most 30 characters',
+        'string.max': 'Name should have at most 20 characters',
       }),
     phoneNumber: Joi.string().pattern(/^\+?[1-9]\d{1,14}$/).messages({
         'string.pattern.base': 'Phone number must follow the international format',
