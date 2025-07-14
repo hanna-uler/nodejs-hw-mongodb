@@ -6,20 +6,21 @@ const parseContactType = (type) => {
     return undefined;
 };
 
-const parseIsFavorite = (isFav) => {
-    const isString = typeof isFav === "string";
+const parseBoolean = (value) => {
+    const isString = typeof value === "string";
     if (!isString) return;
-    if (isFav === "true") return true;
-    if (isFav === "false") return false;
+    if (value === "true") return true;
+    if (value === "false") return false;
     return undefined;
 };
 
 export const parseFilterParams = (query) => {
-    const { type, isFavorite } = query;
+    const { type, isFavourite } = query;
     const parsedType = parseContactType(type);
-    const parsedIsFavorite = parseIsFavorite(isFavorite);
+    const parsedIsFavourite = parseBoolean(isFavourite);
+
     return {
         type: parsedType,
-        isFavorite: parsedIsFavorite,
+        isFavourite: parsedIsFavourite,
     };
 };
