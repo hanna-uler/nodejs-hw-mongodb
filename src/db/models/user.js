@@ -9,5 +9,10 @@ const usersSchema = new mongoose.Schema({
         timestamps: true,
         versionKey: false
 });
+usersSchema.methods.toJSON = function () {
+    const obj = this.toObject();
+    delete obj.password;
+    return obj;
+};
 
 export const UsersCollection = mongoose.model("users", usersSchema);
