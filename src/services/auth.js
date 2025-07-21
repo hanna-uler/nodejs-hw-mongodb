@@ -17,14 +17,14 @@ export const registerUser = async (payload) => {
 };
 
 export const loginUser = async (payload) => {
-    console.log(`At loginUser => payload: ${payload}`);
+    console.log(`At loginUser => payload.email: ${payload.email}`);
     const user = await UsersCollection.findOne({ email: payload.email });
     if (!user) {
-        throw createHttpError(401, "User is not found");
+        throw createHttpError(401, "Email or password is incorrect.");
     }
     const isEqual = await bcrypt.compare(payload.password, user.password);
     if (!isEqual) {
-        throw createHttpError(401, "The password doesn't match.");
+        throw createHttpError(401, "Email or password is incorrect.");
     }
     await SessionsCollection.deleteOne({ userId: user._id });
 
@@ -33,9 +33,13 @@ export const loginUser = async (payload) => {
 
     return await SessionsCollection.create({
         userId: user._id,
-        accessToken,
-        refreshToken,
-        accessTokenValidUntil: new Date(Date.now + FIFTEEN_MINUTES),
-        refreshTokenValidUntil: new Date(Date.now + THIRTY_DAYS)
+    accessToken,
+    refreshToken,
+    accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
+    refreshTokenValidUntil: new Date(Date.now() + THIRTY_DAYS),
     });
+};
+
+export const logoutUser = async (sessionId) => {
+    await SessionsCollection.deleteOne({ _id: sessionId });
 };
