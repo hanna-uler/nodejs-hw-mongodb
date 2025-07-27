@@ -93,7 +93,7 @@ export const sendPassResetEmail = async (email) => {
             email,
         },
         getEnvVar("JWT_SECRET"), {
-        expiresIn: "15m"
+        expiresIn: "5m"
     }
     );
 
@@ -104,10 +104,15 @@ export const sendPassResetEmail = async (email) => {
         name: user.name,
         link: `${getEnvVar("APP_DOMAIN")}/reset-password?token=${resetToken}`
     });
-    await sendEmail({
-        from: getEnvVar(SMTP.SMTP_FROM),
-        to: email,
-        subject: "Reset Password Link",
-        html
-    });
+    try {
+        await sendEmail({
+            from: getEnvVar(SMTP.SMTP_FROM),
+            to: email,
+            subject: "Reset Password Link",
+            html
+        });
+    } catch (error) {
+        console.error("Email sending failed: ", error.message);
+        throw createHttpError(500, "Failed to send the email, please try again later.");
+    }
 };
