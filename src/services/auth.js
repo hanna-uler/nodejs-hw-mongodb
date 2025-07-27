@@ -4,7 +4,10 @@ import createHttpError from "http-errors";
 import bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
 import jwt from 'jsonwebtoken';
-import { FIFTEEN_MINUTES, THIRTY_DAYS, SMTP } from "../constants/index.js";
+import handlebars from "handlebars";
+import path from 'node:path';
+import fs from 'node:fs/promises';
+import { FIFTEEN_MINUTES, THIRTY_DAYS, SMTP, TEMPLATES_DIR } from "../constants/index.js";
 import { getEnvVar } from "../utils/getEnvVar.js";
 import { sendEmail } from "../utils/sendEmail.js";
 
@@ -93,10 +96,18 @@ export const sendPassResetEmail = async (email) => {
         expiresIn: "15m"
     }
     );
+
+    const resetPassTemplatePath = path.join(TEMPLATES_DIR, "reset-password-email.html");
+    const templateSource = (await fs.readFile(resetPassTemplatePath)).toString();
+    const template = handlebars.compile(templateSource);
+    const html = template({
+        name: user.name,
+        link: `${getEnvVar("APP_DOMAIN")}/reset-password?token=${resetToken}`
+    });
     await sendEmail({
         from: getEnvVar(SMTP.SMTP_FROM),
         to: email,
         subject: "Reset Password Link",
-        html: `<p>Click <a href="${resetToken}">here</a> to reset your password.</p>`,
+        html
     });
 };
