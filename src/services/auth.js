@@ -116,3 +116,26 @@ export const sendPassResetEmail = async (email) => {
         throw createHttpError(500, "Failed to send the email, please try again later.");
     }
 };
+
+
+export const resetPassword = async (payload) => {
+    let entries;
+    try {
+        entries = jwt.verify(payload.token, getEnvVar("JWT_SECRET"));
+    } catch (error) {
+        if (error instanceof Error) throw createHttpError(401, error.message);
+        throw error;
+    }
+    const user = await UsersCollection.findOne({
+        email: entries.email,
+        _id: entries.sub
+    });
+    if (!user) {
+        throw createHttpError(404, "User is not found.");
+    }
+    const encryptedPass = await bcrypt.hash(payload.password, 10);
+    await UsersCollection.updateOne(
+        { _id: user._id },
+        { password: encryptedPass }
+    );
+};
