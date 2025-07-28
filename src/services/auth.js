@@ -123,7 +123,10 @@ export const resetPassword = async (payload) => {
     try {
         entries = jwt.verify(payload.token, getEnvVar("JWT_SECRET"));
     } catch (error) {
-        if (error instanceof Error) throw createHttpError(401, error.message);
+        if (error.name === "TokenExpiredError" || error.name === "JsonWebTokenError") {
+            throw createHttpError(401, "Token is invalid or has expired.");
+        };
+        console.error(error.name);
         throw error;
     }
     const user = await UsersCollection.findOne({
@@ -138,4 +141,6 @@ export const resetPassword = async (payload) => {
         { _id: user._id },
         { password: encryptedPass }
     );
+
+    await SessionsCollection.deleteMany({ userId: user._id });
 };
