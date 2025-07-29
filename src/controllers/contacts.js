@@ -10,10 +10,6 @@ export const getContactsController = async (req, res) => {
     const { sortBy, sortOrder } = parseSortParams(req.query);
     const filter = parseFilterParams(req.query);
     const userId = req.user._id;
-    console.log("getContactsController => userId: ", userId);
-
-
-// console.log("getContactsController => sortBy: ", sortBy, "sortOrder: ", sortOrder,"page: ", page,"perPage: ", perPage);
 
     const contacts = await getAllContacts({ userId, page, perPage, sortBy, sortOrder, filter });
     res.json({
@@ -26,7 +22,6 @@ export const getContactsController = async (req, res) => {
 export const getContactByIdController = async (req, res, next) => {
     const contactId = req.params.contactId;
     const userId = req.user._id;
-    console.log("getContactByIdController => userId: ", userId);
 
     const contact = await getContactById(userId, contactId);
     if (!contact) {
@@ -44,13 +39,11 @@ export const createContactController = async (req, res) => {
     const payload = { ...req.body, userId };
     const photo = req.file;
     let photoUrl;
+    
     if (photo) {
         photoUrl = await saveFileToCloudinary(photo);
     }
     const contact = await createContact({...payload, photo: photoUrl });
-    console.log("createContactController => payload: ", payload);
-    console.log("createContactController => {...payload, photo: photoUrl }: ", {...payload, photo: photoUrl });
-
 
     res.status(201).json({
         status: 201,
@@ -63,12 +56,10 @@ export const patchContactController = async (req, res, next) => {
     const { contactId } = req.params;
     const userId = req.user._id;
     const photo = req.file;
-    console.log(`at patchContactController => contactId: ${contactId}, userId: ${userId}, photo: ${photo}`);
     let photoUrl;
     if (photo) {
         photoUrl = await saveFileToCloudinary(photo);
     }
-    console.log(`at patchContactController => photoUrl: ${photoUrl}`);
 
     const result = await updateContact(userId, contactId, {...req.body, photo: photoUrl});
     if (!result) {
