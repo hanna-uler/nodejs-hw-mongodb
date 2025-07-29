@@ -2,6 +2,7 @@ import { getAllContacts, getContactById, createContact, updateContact, deleteCon
 import { parsePaginationParams } from "../utils/parsePaginationParams.js";
 import { parseSortParams } from "../utils/parseSortParams.js";
 import { parseFilterParams } from "../utils/parseFilterParams.js";
+import { saveFileToCloudinary } from "../utils/saveFileToCloudinary.js";
 import createHttpError from "http-errors";
 
 export const getContactsController = async (req, res) => {
@@ -9,10 +10,6 @@ export const getContactsController = async (req, res) => {
     const { sortBy, sortOrder } = parseSortParams(req.query);
     const filter = parseFilterParams(req.query);
     const userId = req.user._id;
-    console.log("getContactsController => userId: ", userId);
-
-
-// console.log("getContactsController => sortBy: ", sortBy, "sortOrder: ", sortOrder,"page: ", page,"perPage: ", perPage);
 
     const contacts = await getAllContacts({ userId, page, perPage, sortBy, sortOrder, filter });
     res.json({
@@ -25,7 +22,6 @@ export const getContactsController = async (req, res) => {
 export const getContactByIdController = async (req, res, next) => {
     const contactId = req.params.contactId;
     const userId = req.user._id;
-    console.log("getContactByIdController => userId: ", userId);
 
     const contact = await getContactById(userId, contactId);
     if (!contact) {
@@ -41,8 +37,13 @@ export const getContactByIdController = async (req, res, next) => {
 export const createContactController = async (req, res) => {
     const userId = req.user._id;
     const payload = { ...req.body, userId };
-    const contact = await createContact(payload);
-    console.log("createContactController => payload: ", payload);
+    const photo = req.file;
+    let photoUrl;
+    
+    if (photo) {
+        photoUrl = await saveFileToCloudinary(photo);
+    }
+    const contact = await createContact({...payload, photo: photoUrl });
 
     res.status(201).json({
         status: 201,
@@ -54,7 +55,13 @@ export const createContactController = async (req, res) => {
 export const patchContactController = async (req, res, next) => {
     const { contactId } = req.params;
     const userId = req.user._id;
-    const result = await updateContact(userId, contactId, req.body);
+    const photo = req.file;
+    let photoUrl;
+    if (photo) {
+        photoUrl = await saveFileToCloudinary(photo);
+    }
+
+    const result = await updateContact(userId, contactId, {...req.body, photo: photoUrl});
     if (!result) {
         next(createHttpError(404, "Contact is not found."));
         return;
