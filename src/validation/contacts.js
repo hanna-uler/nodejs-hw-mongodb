@@ -50,5 +50,5 @@ export const updateContactSchema = Joi.object({
       }
       return true;
     }),
-    // photo: Joi.string()
+    photo: Joi.string()
 });
