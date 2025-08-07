@@ -214,7 +214,7 @@
                     "example": "+13471234567"
                   },
                   "contactType": {
-                    "description": "Category of the contact number",
+                    "description": "Category of the contact number. Must be one of the following - 'work', 'home', or 'personal'.",
                     "type": "string",
                     "enum": [
                       "work",
@@ -224,7 +224,7 @@
                     "example": "work"
                   },
                   "email": {
-                    "description": "Optoinal email of the contact",
+                    "description": "Optoinal email address of the contact",
                     "type": "string",
                     "example": "alicewoods@example.com"
                   },
@@ -338,6 +338,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
           },
           "404": {
             "$ref": "#/components/responses/404"
