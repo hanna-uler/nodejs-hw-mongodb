@@ -1,0 +1,77 @@
+tags:
+  - Contacts
+summary: Update a contact by ID
+operationId: updateContact
+description: Update one or more fields of a contact with the specified ID. Only the fields provided in the request will be updated.
+security:
+  - bearerAuth: []
+parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+      example: '65ca67e7ae7f10c88b598384'
+requestBody:
+  required: true
+  content:
+    multipart/form-data:
+      schema:
+        type: object
+        properties:
+          name:
+            description: Full name of the contact. Optional. Must be between 3 and 20 characters.
+            type: string
+            minLength: 3
+            maxLength: 20
+            example: Alice Woods
+          phoneNumber:
+            description: Phone number in E.164 format. Optional. Must start with an optional `+`, followed by digits only (no spaces or dashes). Between 2 and 15 digits total.
+            type: string
+            pattern: '^\+?[1-9]\d{1,14}$'
+            example: '+13471234567'
+          contactType:
+            description: Category of the contact number. Optional.
+            type: string
+            enum: ['work', 'home', 'personal']
+            example: work
+          email:
+            description: Email address of the contact. Optional.
+            type: string
+            example: alicewoods@example.com
+          isFavourite:
+            description: Indicates if the contact is marked as favorite. Optional.
+            type: boolean
+            example: false
+          userId:
+            description: Automatically injected from the authenticated user. Do not provide this field in the request.
+            type: string
+            example: 65e4decdd286b30065d54af9
+            readOnly: true
+          photo:
+            description: Optional contact photo upload (JPEG/PNG)
+            type: string
+            format: binary
+responses:
+  '200':
+    description: Contact updated successfully
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully updated contact with id 65ca67e7ae7f10c88b598384!
+            data:
+              type: object
+              $ref: '../../../components/schemas/contact.yaml'
+  '401':
+    $ref: '../../../components/responses/401.yaml'
