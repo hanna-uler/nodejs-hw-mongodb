@@ -1,8 +1,8 @@
 tags:
   - Contacts
-summary: Delete contact by id
-operationId: getContact
-description: Delete contact by ID from the user's contact list
+summary: Delete contact by ID
+operationId: deleteContact
+description: Deletes a contact from the authenticated user's contact list based on the provided contact ID.
 security:
   - bearerAuth: []
 parameters:
@@ -12,9 +12,10 @@ parameters:
     schema:
       type: string
       example: '65ca67e7ae7f10c88b598384'
+      description: Unique identifier of the contact to be deleted.
 responses:
   '204':
-    description: 'Deleted contact by id'
+    description: Contact deleted successfully
     content:
       application/json:
         schema:
@@ -30,4 +31,6 @@ responses:
               type: string
               example: Successfully deleted a contact with id 65ca67e7ae7f10c88b598384!
   '404':
-    $ref: '../../../components/responses/404.yaml'
+    $ref: ../../../components/responses/404.yaml
+  '401':
+    $ref: ../../../components/responses/401.yaml
