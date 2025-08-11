@@ -201,7 +201,7 @@
                 ],
                 "properties": {
                   "name": {
-                    "description": "Full name of the contact. Must be 2-20 characters.",
+                    "description": "Full name of the contact. Must be 3-20 characters.",
                     "type": "string",
                     "minLength": 3,
                     "maxLength": 20,
@@ -232,12 +232,6 @@
                     "description": "Indicates if the contact is marked as favorite",
                     "type": "boolean",
                     "example": false
-                  },
-                  "userId": {
-                    "description": "Automatically injected from the authenticated user. Do not provide this field in the request.",
-                    "type": "string",
-                    "example": "65e4decdd286b30065d54af9",
-                    "readOnly": true
                   },
                   "photo": {
                     "description": "Optional contact photo (JPEG/PNG)",
@@ -516,6 +510,61 @@
           "404": {
             "$ref": "#/components/responses/404"
           }
+        }
+      }
+    },
+    "/auth/register": {
+      "tags": [
+        "Auth"
+      ],
+      "summary": "Register a new user",
+      "operationId": "registerUser",
+      "description": "Creates a new user account. This endpoint requires a **name**, **email**, and **password**.",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../../components/schemas/userRegistrationRequest.yaml"
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Successfully registered user",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "status",
+                  "message",
+                  "data"
+                ],
+                "properties": {
+                  "status": {
+                    "type": "integer",
+                    "example": 201
+                  },
+                  "message": {
+                    "type": "string",
+                    "example": "Successfully registered a user!"
+                  },
+                  "data": {
+                    "type": "object",
+                    "$ref": "../../components/schemas/userResponse.yaml"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "401": {
+          "$ref": "../../components/responses/401.yaml"
+        },
+        "409": {
+          "description": "Email already in use."
         }
       }
     }
