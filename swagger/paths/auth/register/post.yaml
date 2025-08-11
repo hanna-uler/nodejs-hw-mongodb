@@ -4,6 +4,7 @@ summary: Register a new user
 operationId: registerUser
 description: Creates a new user account.
   This endpoint requires a **name**, **email**, and **password**.
+security: []
 requestBody:
   required: true
   content:
@@ -30,8 +31,6 @@ responses:
               example: Successfully registered a user!
             data:
               type: object
-              $ref: '../../components/schemas/userResponse.yaml'
-  '401':
-    $ref: '../../components/responses/401.yaml'
+              $ref: ../../../components/schemas/userCreatedResponse.yaml
   '409':
-    description: Email already in use.
+    $ref: ../../../components/responses/409.yaml

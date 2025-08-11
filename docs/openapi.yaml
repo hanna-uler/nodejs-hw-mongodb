@@ -28,7 +28,8 @@ paths:
     delete:
       $ref: ../swagger/paths/contacts/{id}/delete.yaml
   /auth/register:
-    $ref: ../swagger/paths/auth/register/post.yaml
+    post:
+      $ref: ../swagger/paths/auth/register/post.yaml
 components:
   securitySchemes:
     bearerAuth:

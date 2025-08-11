@@ -3,7 +3,6 @@ required:
   - name
   - email
   - _id
-  - password
   - createdAt
   - updatedAt
 properties:
