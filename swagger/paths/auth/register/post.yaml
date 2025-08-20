@@ -1,0 +1,36 @@
+tags:
+  - Auth
+summary: Register a new user
+operationId: registerUser
+description: Creates a new user account.
+  This endpoint requires a **name**, **email**, and **password**.
+security: []
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: '../../../components/schemas/userRegistrationRequest.yaml'
+responses:
+  '201':
+    description: Successfully registered user
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 201
+            message:
+              type: string
+              example: Successfully registered a user!
+            data:
+              type: object
+              $ref: ../../../components/schemas/userCreatedResponse.yaml
+  '409':
+    $ref: ../../../components/responses/409.yaml

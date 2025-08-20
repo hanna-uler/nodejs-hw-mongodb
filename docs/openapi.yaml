@@ -1,0 +1,37 @@
+openapi: 3.1.0
+info:
+  version: 1.0.0
+  title: Phonebook App
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  description: The **Phonebook App** is a RESTful API that allows users to securely manage their personal and professional contacts. This documentation provides a detailed overview of all available endpoints, request/response formats, and authentication requirements.
+tags:
+  - name: Contacts
+    description: Endpoints for managing contacts, including creating, retrieving, updating, and deleting contact entries. Supports advanced features such as pagination, sorting, filtering by contact type or favorite status, and uploading a photo for each contact. All contact data is associated with the authenticated user.
+  - name: Auth
+    description: Authentication and user session management endpoints. Includes functionality for user registration, login with JWT-based access tokens, secure session handling via HTTP-only cookies, token refresh, logout, and password reset workflow.
+servers:
+  - url: http://localhost:3000
+  - url: https://hw2-mongodb-07bu.onrender.com
+paths:
+  /contacts:
+    get:
+      $ref: ../swagger/paths/contacts/get.yaml
+    post:
+      $ref: ../swagger/paths/contacts/post.yaml
+  /contacts/{id}:
+    get:
+      $ref: ../swagger/paths/contacts/{id}/get.yaml
+    patch:
+      $ref: ../swagger/paths/contacts/{id}/patch.yaml
+    delete:
+      $ref: ../swagger/paths/contacts/{id}/delete.yaml
+  /auth/register:
+    post:
+      $ref: ../swagger/paths/auth/register/post.yaml
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer

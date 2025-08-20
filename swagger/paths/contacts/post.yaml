@@ -1,0 +1,69 @@
+tags:
+  - Contacts
+summary: Add a new contact to the user's contact list
+operationId: createContact
+description: Create a new contact and associate it with the authenticated user. This endpoint supports uploading a contact photo and specifying additional contact details.
+security:
+  - bearerAuth: []
+requestBody:
+  required: true
+  content:
+    multipart/form-data:
+      schema:
+        type: object
+        required:
+          - name
+          - phoneNumber
+          - contactType
+        properties:
+          name:
+            description: Full name of the contact. Must be 3-20 characters.
+            type: string
+            minLength: 3
+            maxLength: 20
+            example: Alice Woods
+          phoneNumber:
+            description: Contact's phone number in E.164 format. Must start with an optional `+`, followed by digits (no spaces or dashes). Between 2 and 15 digits.
+            type: string
+            pattern: '^\+?[1-9]\d{1,14}$'
+            example: '+13471234567'
+          contactType:
+            description: Category of the contact number. Must be one of the following - 'work', 'home', or 'personal'.
+            type: string
+            enum: ['work', 'home', 'personal']
+            example: work
+          email:
+            description: Optoinal email address of the contact
+            type: string
+            example: alicewoods@example.com
+          isFavourite:
+            description: Indicates if the contact is marked as favorite
+            type: boolean
+            example: false
+          photo:
+            description: Optional contact photo (JPEG/PNG)
+            type: string
+            format: binary
+responses:
+  '201':
+    description: Contact created successfully
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 201
+            message:
+              type: string
+              example: Successfully created a contact!
+            data:
+              type: object
+              $ref: '../../components/schemas/contact.yaml'
+  '401':
+    $ref: '../../components/responses/401.yaml'
